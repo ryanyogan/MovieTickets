@@ -11,6 +11,8 @@ import MoviePopup from './MoviePopup';
 export default class Movies extends Component {
   state = {
     popupIsOpen: false,
+    chosenDay: 0, // Choose first day by default
+    chosenTime: null, // Time chosen by the user
   }
 
   openMovie = (movie) => {
@@ -23,7 +25,34 @@ export default class Movies extends Component {
   closeMovie = () => {
     this.setState({
       popupIsOpen: false,
+      chosenDay: 0,
+      chosenTime: null,
     });
+  }
+
+  chooseDay = (day) => {
+    this.setState({
+      chosenDay: day,
+    });
+  }
+
+  chooseTime = (time) => {
+    this.setState({
+      chosenTime: time,
+    });
+  }
+
+  bookTicket = () => {
+    if (!this.state.chosenTime) {
+      alert('Please select show time');
+    }
+    else {
+      this.closeMovie(); // Close modal
+      this.props.navigator.push({
+        name: 'confirmation',
+        code: Math.random().toString(36).substring(6).toUpperCase(),
+      });
+    }
   }
 
   render() {
@@ -46,6 +75,11 @@ export default class Movies extends Component {
           movie={this.state.movie}
           isOpen={this.state.popupIsOpen}
           onClose={this.closeMovie}
+          chosenDay={this.state.chosenDay}
+          chosenTime={this.state.chosenTime}
+          onChooseDay={this.chooseDay}
+          onChooseTime={this.chooseTime}
+          onBook={this.bookTicket}
         />
       </View>
     );
